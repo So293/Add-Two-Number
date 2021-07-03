@@ -1,0 +1,113 @@
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // create head node
+        ListNode head = new ListNode();
+        // reference for head node
+        ListNode answer = head;
+        boolean carry = false;
+        // until one of the node gets null
+        while(l1 != null && l2!= null){
+            int num;
+            if(carry){
+                num = l1.val + l2.val + 1;
+            } else {
+                num = l1.val + l2.val;
+            }
+            if(num > 9){
+                carry = true;
+                // neutralising the value as the carry has been forwarded by making the carry = true 
+                num = num - 10;
+            } else {
+                carry = false;
+            }
+            // adding node with the sum
+            // possible to optimise space, by using one of the LL as the sum storage space
+            ListNode temp = new ListNode();
+            temp.val = num;
+            head.next = temp;
+            head = head.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        
+        // what if both of the LL were of equal length but left a carry behind
+        if(l1 == null && l2 == null && carry){
+            ListNode temp = new ListNode();
+            temp.val = 1;
+            head.next = temp;
+        }
+        
+        // what if l2 was shorter than l1
+        if(l1 != null){
+            // if carry is left
+            if(carry){
+                // link the head pointer to rest of l1 node
+                head.next = l1;
+                // storing this pointer so we can have a track of last not null node of l1
+                // in case of carry to link with extra node, with this prev node
+                ListNode prev = l1;
+                // need to loop until the carry gets nullified or l1 gets to null
+                while(l1 != null && carry){
+                    l1.val = l1.val + 1;
+                    if(l1.val < 10){
+                        carry = false;
+                    } else {
+                        l1.val = l1.val - 10;
+                    }
+                    // keep the prev pointer moving
+                    if(l1.next != null){
+                        prev = l1.next;
+                    }
+                    l1 = l1.next;
+                }
+                // if l1 got null but the carry was still remaining
+                if(l1 == null && carry){
+                    ListNode temp = new ListNode();
+                    temp.val = 1;
+                    prev.next = temp;
+                }
+            } else {
+                // link the head pointer to rest of l1 node
+                head.next = l1;
+            }
+        }
+        
+        // what if l1 was shorter than l2
+        if(l2 != null){
+            // if carry is left
+            if(carry){
+                // link the head pointer to rest of l2 node
+                head.next = l2;
+                // storing this pointer so we can have a track of last not null node of l2
+                // in case of carry to link with extra node, with this prev node
+                ListNode prev = l2;
+                // need to loop until the carry gets nullified or l2 gets to null
+                while(l2 != null && carry){
+                    l2.val = l2.val + 1;
+                    if(l2.val < 10){
+                        carry = false;
+                    } else {
+                        l2.val = l2.val - 10;
+                    }
+                    // keep the prev pointer moving
+                    if(l2.next != null){
+                        prev = l2.next;
+                    }
+                    l2 = l2.next;
+                }                
+                // if l2 got null but the carry was still remaining
+                if(l2 == null && carry){
+                    ListNode temp = new ListNode();
+                    temp.val = 1;
+                    prev.next = temp;
+                }
+            } else {
+                // link the head pointer to rest of l2 node
+                head.next = l2;
+            }
+        }
+        
+        // return the ref of head pointer, its next as the first node is zero 
+        return answer.next;
+    }
+}
